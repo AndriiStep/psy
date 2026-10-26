@@ -187,11 +187,11 @@ section { padding-block: clamp(64px, 9vw, 112px); border-bottom: 1px solid var(-
 
 /* ── tests ──────────────────────────────────── */
 .tests { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.tests > :last-child:nth-child(odd) { grid-column: 1 / -1; }
 @media (max-width: 720px) { .tests { grid-template-columns: minmax(0, 1fr); } }
 .test-card { display: grid; grid-template-rows: auto auto 1fr auto; gap: 12px; padding: 22px; }
 .test-card .head { display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
 .test-card .kind { font: 400 10.5px/1 var(--font-display); letter-spacing: .12em; text-transform: uppercase; padding: 5px 7px; border: 1px solid var(--neon); color: var(--bright); }
-.test-card .kind.own { border-color: rgba(217,154,43,.4); color: var(--warn); }
 .test-card p { font-size: 14px; line-height: 1.7; }
 .test-card .foot { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
 .test-card .meta { font: 400 12px/1 var(--font-display); letter-spacing: .08em; color: var(--dim); }
@@ -229,13 +229,6 @@ section { padding-block: clamp(64px, 9vw, 112px); border-bottom: 1px solid var(-
 .scale div.on { border-color: var(--neon); color: var(--bright); box-shadow: 0 -4px 8px -4px rgba(30,168,74,.7); }
 .alert { border: 1px solid var(--danger); background: rgba(224,100,92,.08); padding: 14px 16px; color: #f2b2ad; font-size: 14px; line-height: 1.65; }
 .alert b { color: #ffd4d0; font-weight: 500; }
-.ego { display: grid; gap: 12px; }
-.ego-row { display: grid; grid-template-columns: 11.5em minmax(0, 1fr) 2.6em; gap: 12px; align-items: center; font: 400 13px/1.3 var(--font-display); letter-spacing: .04em; color: var(--fg); }
-.ego-row .track { height: 14px; background: var(--bg-2); border: 1px solid var(--line); }
-.ego-row .track i { display: block; height: 100%; background: var(--neon); box-shadow: var(--glow); }
-.ego-row.top { color: var(--bright); }
-.ego-row .v { text-align: right; color: var(--dim); font-variant-numeric: tabular-nums; }
-@media (max-width: 480px) { .ego-row { grid-template-columns: minmax(0, 1fr) 2.6em; } .ego-row .track { grid-column: 1 / -1; grid-row: 2; } }
 .fine { font-size: 12px !important; color: var(--dim); line-height: 1.6; }
 .btn:disabled { opacity: .45; cursor: not-allowed; box-shadow: none; background: transparent; }
 
@@ -497,7 +490,7 @@ footer .on { color: var(--neon); }
         <p>Пройди короткий тест, щоб краще зрозуміти свій стан. Результат рахується прямо в браузері: відповіді нікуди не надсилаються і ніде не зберігаються.</p>
       </div>
       <div class="tests" id="test-list"></div>
-      <p class="tests-note">Тести допомагають зорієнтуватися, але не ставлять діагноз. Діагноз може встановити тільки лікар. BDI-II і BAI © Pearson, використовуються за ліцензією. PHQ-9 і GAD-7 розробили R. L. Spitzer, J. B. W. Williams, K. Kroenke та колеги за освітнім грантом Pfizer Inc.; шкали вільні для відтворення і перекладу.</p>
+      <p class="tests-note">Тести допомагають зорієнтуватися, але не ставлять діагноз. Діагноз може встановити тільки лікар. Усі шкали валідовані в міжнародних дослідженнях, українські формулювання адаптовані для сайту. Джерело кожної шкали вказане в результаті. BDI-II і BAI © Pearson, використовуються за ліцензією. PHQ-9 і GAD-7 розробили R. L. Spitzer, J. B. W. Williams, K. Kroenke та колеги за освітнім грантом Pfizer Inc.; шкали вільні для відтворення і перекладу.</p>
     </div>
   </section>
 
@@ -867,8 +860,6 @@ footer .on { color: var(--neon); }
 
   /* ── tests ─────────────────────────────────── */
   const FREQ = ["Зовсім ні", "Кілька днів", "Більше половини днів", "Майже щодня"];
-  const SELF = ["Зовсім не про мене", "Іноді", "Часто", "Майже завжди"];
-  const OFTEN = ["Ніколи", "Іноді", "Часто", "Майже завжди"];
   const sum = a => a.reduce((s, v) => s + v, 0);
   const band = (score, bands) => bands.find(b => score <= b.max);
   const CRISIS = 'Якщо тобі зараз небезпечно, зателефонуй <b>112</b> або на лінію <b>Lifeline Ukraine 7333</b> (цілодобово, безкоштовно) і скажи комусь, кому довіряєш, що тобі зараз важко.';
@@ -977,68 +968,78 @@ footer .on { color: var(--neon); }
       ]
     },
     {
-      id: "ego", file: "egogram.exe", kind: "авторський · ТА",
-      title: "Профіль его-станів",
-      desc: "Тест за моделлю транзактного аналізу. Покаже, який із п'яти функціональних его-станів у тебе звучить найголосніше, а якому бракує місця.",
-      meta: "20 тверджень · ~4 хв",
-      prompt: "Наскільки це твердження про тебе?",
-      opts: SELF,
-      states: {
-        CP: { name: "Критичний Батько", high: "Твій внутрішній контролер сильний: ти тримаєш стандарти і правила. Зворотний бік — жорсткість до себе й інших і внутрішні «треба», які виснажують.", low: "У тебе мало внутрішніх «треба». Це дає свободу, але іноді може бракувати рамок і здатності сказати твердо." },
-        NP: { name: "Турботливий Батько", high: "Ти вмієш піклуватися і підтримувати. Важливо, щоб ця турбота діставалася і тобі, а не лише іншим.", low: "Турбота про інших і про себе дається непросто. Це те, чого можна навчитися, починаючи з себе." },
-        A:  { name: "Дорослий", high: "Ти добре спираєшся на факти, аналізуєш і ухвалюєш рішення тут-і-тепер. Це надійний центр, з якого зручно змінюватися.", low: "Емоції або чужі правила часто беруть гору над холодним аналізом. Посилення Дорослого допоможе ухвалювати рішення спокійніше." },
-        FC: { name: "Вільна Дитина", high: "У тобі багато спонтанності, радості та живих бажань. Це твоє джерело енергії і творчості.", low: "Спонтанності й радості зараз мало. Часто це ознака втоми або того, що власні бажання відсунуті на потім." },
-        AC: { name: "Пристосована Дитина", high: "Ти часто підлаштовуєшся, щоб уникнути конфлікту чи несхвалення. Звідси провина, складність із «ні» і відкладені бажання. З цим добре працювати в терапії.", low: "Ти рідко підлаштовуєшся під інших. Добре, якщо при цьому лишається гнучкість і готовність до компромісу." }
-      },
+      id: "who5", file: "who-5.exe", kind: "валідована шкала",
+      title: "Індекс благополуччя ВООЗ (WHO-5)",
+      desc: "П'ять коротких питань від Всесвітньої організації охорони здоров'я про настрій, енергію та інтерес до життя за останні 2 тижні.",
+      meta: "5 питань · ~1 хв",
+      prompt: "Як часто за останні 2 тижні було так:",
+      opts: ["Ніколи", "Зрідка", "Менше половини часу", "Більше половини часу", "Більшість часу", "Весь час"],
       items: [
-        ["Помічаю чужі помилки швидше, ніж чужі успіхи", "CP"],
-        ["Легко помічаю, коли комусь поруч погано", "NP"],
-        ["Перед рішенням збираю факти і зважую варіанти", "A"],
-        ["Легко захоплююсь чимось новим", "FC"],
-        ["Мені важко відмовити, навіть коли не хочу", "AC"],
-        ["Мені важливо, щоб усе робилося правильно, і я кажу про це", "CP"],
-        ["Мені природно підтримувати і заспокоювати інших", "NP"],
-        ["Можу спокійно обговорювати навіть складні теми", "A"],
-        ["Відкрито показую радість, сум чи злість", "FC"],
-        ["Підлаштовуюсь під настрій інших людей", "AC"],
-        ["Часто кажу собі чи іншим «треба», «мусиш», «так не можна»", "CP"],
-        ["Допомагаю, навіть коли мене не просять", "NP"],
-        ["Відрізняю свої почуття від фактів", "A"],
-        ["Роблю щось просто тому, що мені хочеться", "FC"],
-        ["Довго переживаю, що про мене подумають", "AC"],
-        ["Мені важко пробачати недбалість, і собі теж", "CP"],
-        ["Мені приємно дбати про інших", "NP"],
-        ["Коли щось іде не так, спершу шукаю рішення", "A"],
-        ["Вмію дуріти і сміятися від душі", "FC"],
-        ["Відкладаю свої бажання, щоб не створювати незручностей", "AC"]
-      ]
+        "Мені було радісно, і настрій був добрим",
+        "Мені було спокійно і розслаблено",
+        "Мені вистачало енергії та бадьорості",
+        "Я прокидався чи прокидалася з відчуттям свіжості й відпочинку",
+        "Мій день був наповнений тим, що мені цікаво"
+      ],
+      max: 100, unit: "%",
+      score: a => sum(a) * 4,
+      bands: [
+        { max: 28, label: "Дуже низьке благополуччя", text: "Такий результат часто трапляється при депресії. Пройди PHQ-9 і обов'язково покажи результат фахівцю. Напиши мені, і я допоможу зорієнтуватися, до кого звернутися." },
+        { max: 50, label: "Знижене благополуччя", text: "Енергії, радості та інтересу зараз менше, ніж могло б бути. Пройди PHQ-9, щоб перевірити, чи немає ознак депресії, і за потреби запишись на консультацію." },
+        { max: 100, label: "Добре благополуччя", text: "Загалом ти почуваєшся добре. Якщо є конкретна тема, з якою хочеш розібратися, це гарний стан, щоб почати." }
+      ],
+      source: "WHO-5 © Psychiatric Research Unit, Mental Health Centre North Zealand. Вільний для використання без дозволу."
     },
     {
-      id: "bounds", file: "boundaries.exe", kind: "авторський",
-      title: "Тест на особисті кордони",
-      desc: "Наскільки легко тобі казати «ні», захищати свій час і не брати на себе чужу відповідальність.",
+      id: "rses", file: "rosenberg.exe", kind: "валідована шкала",
+      title: "Шкала самооцінки Розенберга",
+      desc: "Одна з найпоширеніших у світі шкал для оцінки загального ставлення до себе.",
       meta: "10 тверджень · ~2 хв",
-      prompt: "Як часто це з тобою трапляється?",
-      opts: OFTEN,
+      prompt: "Наскільки ти погоджуєшся з цим твердженням?",
+      opts: ["Зовсім ні", "Скоріше ні", "Скоріше так", "Повністю так"],
       items: [
-        "Погоджуюсь на прохання, хоча всередині хочу відмовити",
-        "Після відмови відчуваю провину",
-        "Беру на себе відповідальність за настрій інших людей",
-        "Мовчу, коли мене щось зачіпає, щоб не псувати стосунки",
-        "Мені важко попросити про допомогу",
-        "Мій час і плани легко зсуваються під чужі потреби",
-        "Пояснюю і виправдовую свої рішення довше, ніж потрібно",
-        "Відчуваю злість чи образу після того, як погоджуюсь на щось небажане",
-        "Боюся, що після мого «ні» мене перестануть любити чи цінувати",
-        "Мені важко зрозуміти, чого хочу саме я, коли поруч інші"
+        "Загалом я відчуваю задоволення собою",
+        { t: "Часом мені здається, що я ні на що не годжуся", s: [3, 2, 1, 0] },
+        "Я відчуваю, що маю чимало хороших якостей",
+        "Я можу робити справи не гірше, ніж більшість людей",
+        { t: "Мені здається, що в мене небагато того, чим можна пишатися", s: [3, 2, 1, 0] },
+        { t: "Часом я відчуваю себе непотрібною людиною", s: [3, 2, 1, 0] },
+        "Я відчуваю, що я цінна людина, принаймні не менш цінна, ніж інші",
+        { t: "Хотілося б мені більше поважати себе", s: [3, 2, 1, 0] },
+        { t: "Загалом мені часто здається, що я невдаха", s: [3, 2, 1, 0] },
+        "Я ставлюся до себе позитивно"
       ],
       max: 30,
       bands: [
-        { max: 7, label: "Здорові кордони", text: "Ти добре відчуваєш свої межі і вмієш їх захищати. Сильна сторона, на яку можна спиратися." },
-        { max: 15, label: "Кордони місцями проминаються", text: "У більшості ситуацій ти тримаєш межі, але з деякими людьми чи темами поступаєшся собою. Варто помітити, де саме це відбувається." },
-        { max: 22, label: "Кордони часто порушуються", text: "Чужі потреби регулярно стають важливішими за твої. Звідси втома, провина і прихована злість. Кордонам можна навчитися, і це одна з тем, з якою я працюю." },
-        { max: 30, label: "Кордони майже не захищені", text: "Казати «ні» і відстоювати себе зараз дуже складно. Це не риса характеру, а навичка, яку можна вибудувати крок за кроком. Самостійно це важко, тож підтримка фахівця тут дуже доречна." }
-      ]
+        { max: 14, label: "Низька самооцінка", text: "Зараз ти часто дивишся на себе критично і недооцінюєш себе. Це одна з тем, з якою я працюю: можемо разом подивитися, звідки береться внутрішній критик." },
+        { max: 25, label: "Самооцінка в нормі", text: "Загалом ти ставишся до себе стабільно і з повагою. Сумніви бувають, але не визначають, як ти себе бачиш." },
+        { max: 30, label: "Висока самооцінка", text: "Ти маєш міцне позитивне ставлення до себе. Це хороша опора в складні періоди." }
+      ],
+      source: "Rosenberg Self-Esteem Scale (M. Rosenberg, 1965). Дозволено використовувати без окремого дозволу."
+    },
+    {
+      id: "pcptsd5", file: "pc-ptsd-5.exe", kind: "валідована шкала",
+      title: "Скринінг ПТСР (PC-PTSD-5)",
+      desc: "Короткий скринінг посттравматичного стресового розладу від Національного центру ПТСР (США). Актуальний для життя у війні.",
+      meta: "1 + 5 питань · ~1 хв",
+      prompt: "За останній місяць чи було з тобою таке?",
+      opts: ["Ні", "Так"],
+      gate: true,
+      items: [
+        { p: "Спершу одне загальне питання:", t: "Чи траплялися з тобою колись дуже страшні, жахливі або травматичні події? Наприклад: серйозна аварія чи пожежа, фізичне або сексуальне насильство, бойові дії чи обстріли, загроза життю, раптова смерть близької людини.", s: [0, 0] },
+        "Кошмари про цю подію або думки про неї, коли ти цього не хочеш",
+        "Сильні зусилля, щоб не думати про подію, або уникання ситуацій, що про неї нагадують",
+        "Постійна настороженість, пильність, схильність легко лякатися",
+        "Заціпеніння або відчуття відстороненості від людей, занять чи всього довкола",
+        "Почуття провини або неможливість перестати звинувачувати себе чи інших у тому, що сталося, або в наслідках події"
+      ],
+      max: 5,
+      gateBand: { label: "Скринінг не застосовується", text: "Травматичних подій у твоїх відповідях немає, тож цей тест для тебе не потрібен. Якщо щось усе ж непокоїть, про це можна поговорити на консультації." },
+      bands: [
+        { max: 2, label: "Скринінг негативний", text: "Ознак ПТСР у відповідях мало. Якщо пережита подія все одно тебе турбує, про це варто поговорити з фахівцем." },
+        { max: 5, label: "Скринінг позитивний", text: "Відповіді вказують на можливий посттравматичний стресовий розлад. Це не діагноз, але важливо звернутися до спеціаліста з травмотерапії. Напиши мені, і я допоможу знайти фахівця." }
+      ],
+      source: "PC-PTSD-5 (Prins et al., 2016), National Center for PTSD. Перебуває в суспільному надбанні."
     },
     {
       id: "bdi", file: "bdi-ii.exe", kind: "шкала Бека",
@@ -1074,12 +1075,11 @@ footer .on { color: var(--neon); }
     }
   ];
 
-  // Items come as a string, a [text, egoState] pair, or an object with its own options and scores.
+  // Items come as a string or as an object with its own prompt, options and scores.
   function itemAt(t, i) {
     const it = t.items[i];
-    if (typeof it === "string") return { t: it, o: t.opts, s: null };
-    if (Array.isArray(it)) return { t: it[0], o: t.opts, s: null };
-    return { t: it.t, o: it.o || t.opts, s: it.s || null };
+    if (typeof it === "string") return { t: it, o: t.opts, s: null, p: null };
+    return { t: it.t, o: it.o || t.opts, s: it.s || null, p: it.p || null };
   }
   const isReady = t => t.items.every((_, i) => { const it = itemAt(t, i); return it.t && it.o.every(Boolean); });
 
@@ -1089,7 +1089,7 @@ footer .on { color: var(--neon); }
     card.className = "test-card panel";
     card.innerHTML = `
       <div class="head"><span class="file" style="font:400 11px/1 var(--font-display);letter-spacing:.1em;color:var(--dim)">${t.file}</span>
-        <span class="kind ${t.kind.startsWith("авторський") ? "own" : ""}">${t.kind}</span></div>
+        <span class="kind">${t.kind}</span></div>
       <h3>${t.title}</h3>
       <p>${t.desc}</p>
       <div class="foot"><span class="meta">${t.meta}</span><button class="btn" type="button" id="start-${t.id}">[▶ Пройти тест]</button></div>`;
@@ -1133,7 +1133,7 @@ footer .on { color: var(--neon); }
     body.innerHTML = `
       <div class="progress"><span class="count">${String(idx + 1).padStart(2, "0")} / ${String(n).padStart(2, "0")}</span>
         <div class="bar"><i style="width:${(idx / n) * 100}%"></i></div></div>
-      <p class="q-prompt">${cur.prompt}</p>
+      <p class="q-prompt">${item.p || cur.prompt}</p>
       <p class="q-text" id="dlg-title">${item.t}</p>
       <div class="opts">${item.o.map((o, i) => `<button type="button" class="opt ${picks[idx] === i ? "sel" : ""}" data-v="${i}"><kbd>[${i + 1}]</kbd><span>${o}</span></button>`).join("")}</div>
       <div class="dlg-nav"><button class="btn btn--ghost" type="button" id="back" ${idx === 0 ? "disabled" : ""}>[◀ Назад]</button></div>`;
@@ -1148,6 +1148,7 @@ footer .on { color: var(--neon); }
     answers[idx] = item.s ? item.s[v] : v;
     body.querySelectorAll(".opt").forEach(b => b.classList.toggle("sel", +b.dataset.v === v));
     setTimeout(() => {
+      if (cur.gate && idx === 0 && v === 0) return renderResult();
       if (idx < cur.items.length - 1) { idx++; renderQ(); } else renderResult();
     }, 160);
   }
@@ -1166,39 +1167,20 @@ footer .on { color: var(--neon); }
   }
 
   function renderResult() {
-    if (cur.states) return renderEgo();
-    const score = sum(answers);
-    const b = band(score, cur.bands);
+    // A gated test (PC-PTSD-5) stops after a "no" to its first question.
+    const gated = cur.gate && picks[0] === 0;
+    const score = cur.score ? cur.score(answers) : sum(answers);
+    const b = gated ? cur.gateBand : band(score, cur.bands);
     const alert = cur.alert ? cur.alert(answers) : "";
     body.innerHTML = `
       <div class="eyebrow">&gt; результат</div>
       <h3 id="dlg-title">${cur.title}</h3>
-      <div class="score"><b>${score}</b><span>/ ${cur.max} балів</span></div>
-      <div class="scale" style="--n:${cur.bands.length}">${cur.bands.map(x => `<div class="${x === b ? "on" : ""}">${x.label}</div>`).join("")}</div>
+      ${gated ? "" : `<div class="score"><b>${score}</b><span>/ ${cur.max} ${cur.unit || "балів"}</span></div>
+      <div class="scale" style="--n:${cur.bands.length}">${cur.bands.map(x => `<div class="${x === b ? "on" : ""}">${x.label}</div>`).join("")}</div>`}
       <div class="band">${b.label}</div>
       <p>${b.text}</p>
       ${alert ? `<div class="alert">${alert}</div>` : ""}
-      ${resultActions()}`;
-    body.querySelector("#again").addEventListener("click", () => openTest(cur));
-  }
-
-  function renderEgo() {
-    const keys = Object.keys(cur.states);
-    const totals = Object.fromEntries(keys.map(k => [k, 0]));
-    cur.items.forEach(([, k], i) => (totals[k] += answers[i]));
-    const sorted = [...keys].sort((a, b) => totals[b] - totals[a]);
-    const top = sorted[0], low = sorted[sorted.length - 1];
-    body.innerHTML = `
-      <div class="eyebrow">&gt; егограма</div>
-      <h3 id="dlg-title">${cur.title}</h3>
-      <div class="ego">${keys.map(k => `
-        <div class="ego-row ${k === top ? "top" : ""}"><span>${cur.states[k].name}</span>
-          <span class="track"><i style="width:${(totals[k] / 12) * 100}%"></i></span><span class="v">${totals[k]}/12</span></div>`).join("")}</div>
-      <div class="band">Найсильніший: ${cur.states[top].name}</div>
-      <p>${cur.states[top].high}</p>
-      <div class="band">Найслабший: ${cur.states[low].name}</div>
-      <p>${cur.states[low].low}</p>
-      <p class="fine">Авторський опитувальник за функціональною моделлю его-станів Е. Берна і егограмою Дж. Дюсея. Не є валідованою методикою: він для самопізнання і розмови на сесії.</p>
+      ${cur.source ? `<p class="fine">${cur.source}</p>` : ""}
       ${resultActions()}`;
     body.querySelector("#again").addEventListener("click", () => openTest(cur));
   }
