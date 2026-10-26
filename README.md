@@ -1,8 +1,23 @@
 # Андрій Стефурак — психолог
 
-Особистий сайт психолога-консультанта в стилі матриці. Один файл `index.html`: стилі, скрипти, фото і тести вбудовані в нього.
+Особистий сайт психолога-консультанта в стилі матриці: https://www.andriistefurak.com
 
+- `index.html` — увесь сайт: стилі, скрипти і тести
+- `andrii.jpg` — фото
 - `logo.svg`, `favicon.svg` — логотип AS
-- `andrii.jpg` — фото в оригінальному розмірі
+- `tests/` — сторінки окремих тестів, **генеруються** з `index.html`
+
+## Після кожної зміни `index.html`
+
+```bash
+python3 build.py
+```
+
+Скрипт оновлює `tests/index.html` (розділ тестів) і `tests/<id>/index.html` (кожен тест зі своєю назвою і прев'ю посилання). Потім `git add -A && git commit && git push`, і Vercel викладе сайт.
+
+## Посилання
+
+- Усі тести: https://www.andriistefurak.com/tests/
+- Окремий тест: https://www.andriistefurak.com/tests/phq9/ (`gad7`, `who5`, `rses`, `pcptsd5`, `swls`, `pwi`, `bdi`, `bai`)
 
 Тексти шкал Бека (BDI-II, BAI) вставляються в блок `ШКАЛИ БЕКА` у `index.html`.
