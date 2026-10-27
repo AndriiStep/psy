@@ -18,6 +18,6 @@ python3 build.py
 ## Посилання
 
 - Усі тести: https://www.andriistefurak.com/tests/
-- Окремий тест: https://www.andriistefurak.com/tests/phq9/ (`gad7`, `who5`, `rses`, `pcptsd5`, `swls`, `pwi`, `bdi`, `bai`)
+- Окремий тест: https://www.andriistefurak.com/tests/phq9/ (`gad7`, `who5`, `rses`, `pcptsd5`, `swls`, `pwi`, `scs`, `bigfive`)
 
-Тексти шкал Бека (BDI-II, BAI) вставляються в блок `ШКАЛИ БЕКА` у `index.html`.
+Тексти шкал Бека (BDI-II, BAI) вставляються в блок `ШКАЛИ БЕКА`, тест Бравермана — у блок `ТЕСТ БРАВЕРМАНА` в `index.html`. Поки тексти порожні, ці тести на сайті приховані; після заповнення запусти `python3 build.py`.

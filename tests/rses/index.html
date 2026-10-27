@@ -256,8 +256,13 @@ html.is-locked .dlg { touch-action: pan-y; }
 .score span { font: 400 14px/1 var(--font-display); color: var(--dim); letter-spacing: .08em; }
 .band { font: 400 1.1rem/1.3 var(--font-display); letter-spacing: .08em; text-transform: uppercase; color: var(--bright); }
 .scale { display: grid; grid-template-columns: repeat(var(--n), minmax(0, 1fr)); gap: 3px; }
-.scale div { padding-top: 8px; border-top: 4px solid var(--line); font: 400 10.5px/1.3 var(--font-display); color: var(--dim); letter-spacing: .04em; }
+.scale div { overflow-wrap: break-word; hyphens: auto; padding-top: 8px; border-top: 4px solid var(--line); font: 400 10.5px/1.3 var(--font-display); color: var(--dim); letter-spacing: .04em; }
 .scale div.on { border-color: var(--neon); color: var(--bright); box-shadow: 0 -4px 8px -4px rgba(30,168,74,.7); }
+@media (max-width: 640px) {
+  .scale { grid-template-columns: minmax(0, 1fr); gap: 4px; }
+  .scale div { padding: 4px 0 4px 12px; border-top: 0; border-left: 4px solid var(--line); font-size: 12px; }
+  .scale div.on { box-shadow: -4px 0 8px -4px rgba(30,168,74,.7); }
+}
 .alert { border: 1px solid var(--danger); background: rgba(224,100,92,.08); padding: 14px 16px; color: #f2b2ad; font-size: 14px; line-height: 1.65; }
 .alert b { color: #ffd4d0; font-weight: 500; }
 .fine { font-size: 12px !important; color: var(--dim); line-height: 1.6; }
@@ -345,16 +350,15 @@ html.is-locked .dlg { touch-action: pan-y; }
 @media (max-width: 820px) { .contact .panel { grid-template-columns: minmax(0, 1fr); } .contact .logo-big { max-width: 240px; justify-self: start; } }
 .contacts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; width: 100%; }
 @media (max-width: 560px) { .contacts { grid-template-columns: minmax(0, 1fr); } }
-.contact-row { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; gap: 10px; padding: 14px 16px; border: 1px solid var(--line); background: var(--bg-2); }
+.contact-row { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; padding: 14px 16px; border: 1px solid var(--line); background: var(--bg-2); }
 .contact-row .lbl { font: 400 11px/1 var(--font-display); letter-spacing: .14em; color: var(--dim); text-transform: uppercase; margin-bottom: 6px; }
-.contact-row .handle { font: 400 1.05rem/1.2 var(--font-display); overflow-wrap: anywhere; color: var(--bright);
+.contact-row .handle { font: 400 1.05rem/1.2 var(--font-display); white-space: nowrap; color: var(--bright);
   text-decoration: underline; text-decoration-color: var(--neon); text-decoration-thickness: 1px; text-underline-offset: 5px; }
 .contact-row .handle::after { content: " ↗"; color: var(--neon); }
 .contact-row .handle:hover { background: var(--neon); color: var(--bg); text-decoration: none; text-shadow: none; }
 .contact-row .handle:hover::after { color: var(--bg); }
 .open { font: 400 11px/1 var(--font-display); letter-spacing: .1em; text-transform: uppercase; color: var(--bright); border: 1px solid var(--neon); background: rgba(0,255,65,.1); padding: 8px 9px; white-space: nowrap; }
 .open:hover { background: var(--neon); color: var(--bg); text-shadow: none; }
-@media (max-width: 380px) { .contact-row { grid-template-columns: minmax(0, 1fr) auto; } .contact-row .copy { display: none; } }
 .copy { font: 400 11px/1 var(--font-display); letter-spacing: .1em; text-transform: uppercase; background: transparent; color: var(--dim); border: 1px solid var(--line); padding: 8px 9px; cursor: pointer; }
 .copy:hover { color: var(--bright); border-color: var(--neon); }
 
@@ -724,12 +728,10 @@ footer .on { color: var(--neon); }
             <div class="contact-row">
               <div><div class="lbl">Telegram</div><a class="handle" href="https://t.me/AndyStefurak" target="_blank" rel="noopener">@AndyStefurak</a></div>
               <a class="open" href="https://t.me/AndyStefurak" target="_blank" rel="noopener">Написати</a>
-              <button class="copy" type="button" id="copy-tg" data-copy="@AndyStefurak">copy</button>
             </div>
             <div class="contact-row">
               <div><div class="lbl">Instagram</div><a class="handle" href="https://www.instagram.com/andy.stefurak/" target="_blank" rel="noopener">@Andy.Stefurak</a></div>
               <a class="open" href="https://www.instagram.com/andy.stefurak/" target="_blank" rel="noopener">Відкрити</a>
-              <button class="copy" type="button" id="copy-ig" data-copy="@Andy.Stefurak">copy</button>
             </div>
           </div>
           <a class="btn" href="https://t.me/AndyStefurak" target="_blank" rel="noopener">[▶ Записатися на консультацію]</a>
@@ -907,20 +909,6 @@ footer .on { color: var(--neon); }
     requestAnimationFrame(frame);
   }
 
-  // Copy handles.
-  document.querySelectorAll(".copy").forEach(b => b.addEventListener("click", () => {
-    const done = txt => { b.textContent = txt; setTimeout(() => (b.textContent = "copy"), 1400); };
-    const fallback = () => {
-      const a = b.parentElement.querySelector(".handle");
-      const range = document.createRange(); range.selectNodeContents(a);
-      const sel = getSelection(); sel.removeAllRanges(); sel.addRange(range);
-      done("виділено");
-    };
-    try {
-      navigator.clipboard.writeText(b.dataset.copy).then(() => done("ok"), fallback);
-    } catch (e) { fallback(); }
-  }));
-
   /* ── tests ─────────────────────────────────── */
   const FREQ = ["Зовсім ні", "Кілька днів", "Більше половини днів", "Майже щодня"];
   const sum = a => a.reduce((s, v) => s + v, 0);
@@ -967,6 +955,20 @@ footer .on { color: var(--neon); }
   ];
   const BECK_BAI_OPTS = ["Зовсім ні", "Легко", "Помірно", "Сильно"];
   /* ═══════════════════════ кінець блоку шкал Бека ═══════════════════════ */
+
+  /* ════════════════════════════════════════════════════════════════════
+     ТЕСТ БРАВЕРМАНА — встав сюди твердження з твого джерела.
+     Для кожного нейромедіатора: items — твердження (відповідь так/ні),
+     high / mid / low — опис для високого, середнього і низького балу.
+     Поки items порожні, тест на сайті не показується.
+     ════════════════════════════════════════════════════════════════════ */
+  const BRAVERMAN = {
+    dopamine:      { name: "Дофамін",     items: [], high: "", mid: "", low: "" },
+    acetylcholine: { name: "Ацетилхолін", items: [], high: "", mid: "", low: "" },
+    gaba:          { name: "ГАМК",        items: [], high: "", mid: "", low: "" },
+    serotonin:     { name: "Серотонін",   items: [], high: "", mid: "", low: "" }
+  };
+  /* ═════════════════════ кінець блоку тесту Бравермана ═════════════════════ */
 
   // Depression bands share wording; only the cut-offs differ between scales.
   const DEP_TEXT = {
@@ -1166,6 +1168,87 @@ footer .on { color: var(--neon); }
       source: "Personal Wellbeing Index — Adult (International Wellbeing Group, R. A. Cummins). Вільний для використання."
     },
     {
+      id: "scs", file: "self-compassion.exe", kind: "валідована шкала",
+      title: "Шкала співчуття до себе (SCS-SF)",
+      desc: "Наскільки тобі вдається ставитися до себе з тією ж теплотою і прийняттям, з якою ставишся до близьких. Безумовне прийняття себе, у дусі клієнтоцентрованого підходу.",
+      meta: "12 тверджень · ~3 хв",
+      prompt: "Як часто ти поводишся з собою так у складні моменти?",
+      opts: ["Майже ніколи", "Рідко", "Іноді", "Часто", "Майже завжди"],
+      base: 1,
+      items: [
+        { t: "Коли мені не вдається щось важливе, мене поглинає відчуття власної неспроможності", s: [5, 4, 3, 2, 1] },
+        "Я намагаюся з розумінням і терпінням ставитися до тих рис свого характеру, які мені не подобаються",
+        "Коли стається щось болісне, я намагаюся зважено дивитися на ситуацію",
+        { t: "Коли мені погано, здається, що більшість інших людей, мабуть, щасливіші за мене", s: [5, 4, 3, 2, 1] },
+        "Я намагаюся сприймати свої невдачі як частину людського досвіду",
+        "Коли мені дуже важко, я даю собі турботу і ніжність, яких потребую",
+        "Коли щось мене засмучує, я намагаюся зберігати емоційну рівновагу",
+        { t: "Коли мені не вдається щось важливе, я почуваюся самотньо у своїй невдачі", s: [5, 4, 3, 2, 1] },
+        { t: "Коли мені погано, мене затягує в думки про все, що не так", s: [5, 4, 3, 2, 1] },
+        "Коли я відчуваю, що в чомусь не дотягую, я нагадую собі, що таке відчуття знайоме більшості людей",
+        { t: "Я засуджую і критикую себе за свої недоліки та слабкі місця", s: [5, 4, 3, 2, 1] },
+        { t: "Я нетерпимо ставлюся до тих рис свого характеру, які мені не подобаються", s: [5, 4, 3, 2, 1] }
+      ],
+      max: 5, unit: "середній бал",
+      score: a => Math.round(sum(a) / a.length * 10) / 10,
+      bands: [
+        { max: 2.49, label: "Низьке співчуття до себе", text: "У складні моменти ти частіше критикуєш себе, ніж підтримуєш. Внутрішній критик звучить голосніше за внутрішнього друга. З цим можна працювати: прийняття себе — навичка, яку реально розвинути." },
+        { max: 3.5, label: "Помірне співчуття до себе", text: "Іноді тобі вдається поставитися до себе з теплотою, а іноді вмикається самокритика. Варто помітити, в яких ситуаціях підтримка собі зникає." },
+        { max: 5, label: "Високе співчуття до себе", text: "Ти вмієш підтримувати себе в невдачах і не залишатися з болем наодинці. Це сильний ресурс психологічної стійкості." }
+      ],
+      source: "Self-Compassion Scale — Short Form (F. Raes, E. Pommier, K. D. Neff, D. Van Gucht, 2011). Авторка шкали дозволяє використовувати її без окремого дозволу."
+    },
+    {
+      id: "bigfive", file: "big-five.exe", kind: "валідована шкала",
+      title: "Риси особистості Big Five (Mini-IPIP)",
+      desc: "Короткий тест на п'ять базових рис особистості: екстраверсію, доброзичливість, сумлінність, емоційну чутливість і відкритість досвіду. Сучасна наукова альтернатива тестам на темперамент і типи.",
+      meta: "20 тверджень · ~3 хв",
+      prompt: "Наскільки точно це твердження описує тебе?",
+      opts: ["Зовсім не про мене", "Скоріше не про мене", "Важко сказати", "Скоріше про мене", "Точно про мене"],
+      base: 1,
+      factors: {
+        E: { name: "Екстраверсія", high: "Тебе заряджають люди і спілкування, ти легко береш ініціативу в компанії.", low: "Тобі ближчі тиша і невелике коло людей, енергію ти відновлюєш наодинці.", mid: "Ти комфортно почуваєшся і в компанії, і наодинці, залежно від ситуації." },
+        A: { name: "Доброзичливість", high: "Ти тонко відчуваєш інших і легко співчуваєш. Важливо, щоб турбота про інших не витісняла турботу про себе.", low: "Ти тримаєш дистанцію і більше спираєшся на власні інтереси, ніж на почуття інших.", mid: "Ти вмієш співчувати, але й не забуваєш про власні межі." },
+        C: { name: "Сумлінність", high: "Ти організовано дієш, любиш порядок і доводиш справи до кінця.", low: "Тобі ближча спонтанність, ніж планування. Структура і режим можуть даватися непросто.", mid: "Ти вмієш зібратися й організуватися, коли це справді важливо." },
+        N: { name: "Емоційна чутливість", high: "Ти глибоко переживаєш і легко засмучуєшся, настрій часто змінюється. Це не вада, але варто мати способи підтримувати себе.", low: "Ти здебільшого спокійно реагуєш на стрес і рідко виходиш із рівноваги.", mid: "Ти помітно реагуєш на стрес, але загалом швидко повертаєшся до рівноваги." },
+        O: { name: "Відкритість досвіду", high: "У тебе жива уява і цікавість до ідей, мистецтва та нового досвіду.", low: "Тобі ближче конкретне і перевірене, ніж абстрактні ідеї та експерименти.", mid: "Ти цінуєш нове, але не відмовляєшся від перевіреного." }
+      },
+      items: [
+        { t: "Я душа компанії", k: "E" },
+        { t: "Я співчуваю почуттям інших", k: "A" },
+        { t: "Я виконую справи одразу, не відкладаючи", k: "C" },
+        { t: "У мене часто змінюється настрій", k: "N" },
+        { t: "У мене яскрава уява", k: "O" },
+        { t: "Я мало говорю", k: "E", s: [5, 4, 3, 2, 1] },
+        { t: "Мене не цікавлять проблеми інших людей", k: "A", s: [5, 4, 3, 2, 1] },
+        { t: "Я часто забуваю класти речі на місце", k: "C", s: [5, 4, 3, 2, 1] },
+        { t: "Здебільшого мені спокійно", k: "N", s: [5, 4, 3, 2, 1] },
+        { t: "Мене не цікавлять абстрактні ідеї", k: "O", s: [5, 4, 3, 2, 1] },
+        { t: "На вечірках я спілкуюся з багатьма різними людьми", k: "E" },
+        { t: "Я відчуваю емоції інших людей", k: "A" },
+        { t: "Я люблю порядок", k: "C" },
+        { t: "Мене легко засмутити", k: "N" },
+        { t: "Мені важко зрозуміти абстрактні ідеї", k: "O", s: [5, 4, 3, 2, 1] },
+        { t: "Я тримаюся в тіні", k: "E", s: [5, 4, 3, 2, 1] },
+        { t: "Інші люди мене не надто цікавлять", k: "A", s: [5, 4, 3, 2, 1] },
+        { t: "Після мене часто лишається безлад", k: "C", s: [5, 4, 3, 2, 1] },
+        { t: "Мені рідко буває сумно", k: "N", s: [5, 4, 3, 2, 1] },
+        { t: "У мене не дуже багата уява", k: "O", s: [5, 4, 3, 2, 1] }
+      ],
+      source: "Mini-IPIP (M. B. Donnellan, F. L. Oswald, B. M. Baird, R. E. Lucas, 2006). Пункти з International Personality Item Pool, що перебуває в суспільному надбанні."
+    },
+    {
+      id: "braverman", file: "braverman.exe", kind: "нейромедіатори",
+      title: "Тест Бравермана (нейромедіатори)",
+      desc: "Опитувальник Е. Бравермана про баланс чотирьох нейромедіаторів: дофаміну, ацетилхоліну, ГАМК і серотоніну.",
+      meta: "так / ні · ~15–20 хв",
+      prompt: "Чи це про тебе?",
+      opts: ["Ні", "Так"],
+      factors: BRAVERMAN,
+      items: Object.entries(BRAVERMAN).flatMap(([k, f]) => f.items.map(t => ({ t, k }))),
+      source: "Методика Е. Бравермана (The Edge Effect). Не є науково валідованою: результат — для самоспостереження і розмови на сесії."
+    },
+    {
       id: "bdi", file: "bdi-ii.exe", kind: "шкала Бека",
       title: "Шкала депресії Бека (BDI-II)",
       desc: "Класичний опитувальник для оцінки вираженості депресивних симптомів за останні 2 тижні.",
@@ -1205,7 +1288,7 @@ footer .on { color: var(--neon); }
     if (typeof it === "string") return { t: it, o: t.opts, s: null, p: null };
     return { t: it.t, o: it.o || t.opts, s: it.s || null, p: it.p || null };
   }
-  const isReady = t => t.items.every((_, i) => { const it = itemAt(t, i); return it.t && it.o.every(Boolean); });
+  const isReady = t => t.items.length > 0 && t.items.every((_, i) => { const it = itemAt(t, i); return it.t && it.o.every(Boolean); });
 
   // Every test has its own page at /tests/<id>/ (generated by build.py) that opens the test on load.
   const SITE = "https://www.andriistefurak.com";
@@ -1221,7 +1304,8 @@ footer .on { color: var(--neon); }
   }
 
   const list = document.getElementById("test-list");
-  TESTS.forEach(t => {
+  // Tests still waiting for their texts (Beck, Braverman) stay in the code but are not shown.
+  TESTS.filter(isReady).forEach(t => {
     const card = document.createElement("article");
     card.className = "test-card panel";
     card.innerHTML = `
@@ -1233,8 +1317,7 @@ footer .on { color: var(--neon); }
         <span class="foot-actions"><button class="copy" type="button" id="link-${t.id}" title="${testUrl(t)}">⧉ посилання</button>
         <button class="btn" type="button" id="start-${t.id}">[▶ Пройти тест]</button></span></div>`;
     const btn = card.querySelector(".btn");
-    if (isReady(t)) btn.addEventListener("click", () => openTest(t, true));
-    else { btn.disabled = true; btn.textContent = "[скоро]"; }
+    btn.addEventListener("click", () => openTest(t, true));
     card.querySelector(".copy").addEventListener("click", e => copyLink(e.currentTarget, testUrl(t)));
     list.appendChild(card);
   });
@@ -1336,7 +1419,33 @@ footer .on { color: var(--neon); }
       <p class="fine">Це результат самоопитувальника, а не діагноз. Якщо результат тебе непокоїть, обговори його з фахівцем.</p>`;
   }
 
+  // Profile tests (Big Five, Braverman) score each factor separately instead of one total.
+  function renderProfile() {
+    const keys = Object.keys(cur.factors);
+    const f = Object.fromEntries(keys.map(k => [k, { v: 0, min: 0, max: 0 }]));
+    cur.items.forEach((_, i) => {
+      const it = itemAt(cur, i), k = cur.items[i].k, base = cur.base || 0;
+      const scores = it.s || it.o.map((_, j) => j + base);
+      f[k].v += answers[i]; f[k].min += Math.min(...scores); f[k].max += Math.max(...scores);
+    });
+    const level = k => { const x = (f[k].v - f[k].min) / ((f[k].max - f[k].min) || 1); return x < 1 / 3 ? "low" : x > 2 / 3 ? "high" : "mid"; };
+    const LEVEL = { low: "низький", mid: "середній", high: "високий" };
+    body.innerHTML = `
+      <div class="eyebrow">&gt; профіль</div>
+      <h3 id="dlg-title">${cur.title}</h3>
+      <div class="bars">${keys.map(k => `
+        <div class="bar-row"><span>${cur.factors[k].name}</span>
+          <span class="track"><i style="width:${(f[k].v - f[k].min) / ((f[k].max - f[k].min) || 1) * 100}%"></i></span>
+          <span class="v">${f[k].v}/${f[k].max}</span></div>`).join("")}</div>
+      ${keys.map(k => `<p><b class="band" style="font-size:.95rem">${cur.factors[k].name}: ${LEVEL[level(k)]}.</b> ${cur.factors[k][level(k)] || ""}</p>`).join("")}
+      ${cur.source ? `<p class="fine">${cur.source}</p>` : ""}
+      ${resultActions()}`;
+    body.querySelector("#again").addEventListener("click", () => openTest(cur));
+    bindShare();
+  }
+
   function renderResult() {
+    if (cur.factors) return renderProfile();
     // A gated test (PC-PTSD-5) stops after a "no" to its first question.
     const gated = cur.gate && picks[0] === 0;
     const score = cur.score ? cur.score(answers) : sum(answers);
