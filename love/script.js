@@ -55,7 +55,6 @@ const REASONS = [
 const LETTER = {
   greeting: 'Коханнячко,',
   paragraphs: [
-    'хотів написати щось дуже красиве, але виходило або пафосно, або «ну ти й так знаєш». Тому скажу просто.',
     'З тобою мені легко, смішно і тепло. Ти найкраща на світі, і я досі трохи в шоці, що мені так пощастило)',
     'Цей сайт тепер твій пульт від наших побачень. Я придумав трохи різних + ти можеш згенерувати рандомні чи додати свої.',
     'Кохаю тебе дуже сильно, кохання моє найбільше на світі.',
@@ -291,23 +290,24 @@ const GENERATOR = {
 };
 
 // tag: 'our' — фільми, які ми хотіли глянути; 'rec' — порада.
-// kind: 'серіал' — показується замість року.
+// kind: 'серіал' — показується замість року; рандом «Серіал» бере саме їх.
+// note — опис одним реченням.
 // Можна дописувати сюди нові: вони з'являться на сайті навіть після того, як Катря вже щось відмітила.
 const DEFAULT_MOVIES = [
-  { title: 'The Fall', tag: 'our' },
-  { title: 'Загублена', year: 2014, tag: 'our', note: 'Фінчер. Після нього дивитимешся на мене підозріло' },
-  { title: 'Seven', year: 1995, tag: 'our', note: 'Знову Фінчер. Точно не для пледу і гірлянд' },
-  { title: 'Mindhunter', kind: 'серіал', tag: 'our', note: 'І ще раз Фінчер, тепер серіалом' },
-  { title: 'Темна матерія', kind: 'серіал', tag: 'our' },
-  { title: 'Жити', year: 1952, tag: 'our', note: 'Куросава про те, як встигнути пожити' },
-  { title: 'Мама', year: 2009, tag: 'our', note: 'Пон Джун Хо ще до «Паразитів»' },
-  { title: 'Love Letter', year: 1995, tag: 'our', note: 'Японська історія про листи і перше кохання' },
-  { title: 'Tokyo-Ga', year: 1985, tag: 'our', note: 'Вім Вендерс шукає Токіо з фільмів Одзу' },
-  { title: 'Таксист', year: 1976, tag: 'our', note: 'Скорсезе, Де Ніро і «Ти це мені?»' },
-  { title: 'Володар Перснів', tag: 'our', note: 'Трилогія. Розширена версія, беремо вихідні' },
-  { title: 'Перед світанком', year: 1995, tag: 'rec', note: 'Одна ніч у Відні й розмова, яку не хочеться закінчувати' },
-  { title: 'Минулі життя', year: 2023, tag: 'rec', note: 'Тиха історія про зв’язок, що тягнеться крізь роки' },
-  { title: 'Любовний настрій', year: 2000, tag: 'rec', note: 'Найкрасивіше недоговорене кохання' },
+  { title: 'The Fall', year: 2006, tag: 'our', note: 'Поранений каскадер у лікарні 1920-х розповідає маленькій дівчинці казку, яка оживає в неймовірно красивих кадрах.' },
+  { title: 'Загублена', year: 2014, tag: 'our', note: 'У день п’ятої річниці весілля зникає дружина, і всі підозри падають на чоловіка.' },
+  { title: 'Seven', year: 1995, tag: 'our', note: 'Двоє детективів вистежують серійного вбивцю, який карає своїх жертв за сім смертних гріхів.' },
+  { title: 'Mindhunter', kind: 'серіал', tag: 'our', note: 'Агенти ФБР у 1970-х розмовляють із серійними вбивцями, щоб зрозуміти, як вони думають.' },
+  { title: 'Темна матерія', kind: 'серіал', tag: 'our', note: 'Фізика викрадають у паралельне життя, де він не створив сім’ю, і він шукає дорогу назад.' },
+  { title: 'Жити', year: 1952, tag: 'our', note: 'Чиновник дізнається, що смертельно хворий, і вперше намагається прожити свої дні по-справжньому.' },
+  { title: 'Мама', year: 2009, tag: 'our', note: 'Мати сама береться розслідувати вбивство, щоб довести невинуватість свого сина.' },
+  { title: 'Love Letter', year: 1995, tag: 'our', note: 'Жінка пише листа загиблому нареченому на його стару адресу і несподівано отримує відповідь.' },
+  { title: 'Tokyo-Ga', year: 1985, tag: 'our', note: 'Вім Вендерс їде в Токіо шукати сліди світу з фільмів Ясудзіро Одзу.' },
+  { title: 'Таксист', year: 1976, tag: 'our', note: 'Самотній ветеран в’єтнамської війни ночами таксує Нью-Йорком і дедалі більше втрачає зв’язок із реальністю.' },
+  { title: 'Володар Перснів', kind: 'трилогія', tag: 'our', note: 'Гобіт Фродо з друзями вирушає знищити Перстень Всевладдя, поки ним не заволодів Саурон.' },
+  { title: 'Перед світанком', year: 1995, tag: 'rec', note: 'Американець і француженка знайомляться в потязі й проводять разом одну ніч у Відні, розмовляючи про все на світі.' },
+  { title: 'Минулі життя', year: 2023, tag: 'rec', note: 'Двоє друзів дитинства з Сеула зустрічаються через двадцять років, коли їхні життя вже пішли різними шляхами.' },
+  { title: 'Любовний настрій', year: 2000, tag: 'rec', note: 'У Гонконзі 1960-х двоє сусідів дізнаються про роман своїх подружжів, і між ними зароджується тихе почуття.' },
 ];
 
 // Емодзі на вибір для власних карток
@@ -791,6 +791,12 @@ function loadMovies() {
   DEFAULT_MOVIES.forEach(m => {
     if (!known.has(m.title)) state.toWatch.push({ ...m, id: crypto.randomUUID?.() || String(Math.random()) });
   });
+  // Опис, рік і тип для стандартних фільмів завжди беремо з DEFAULT_MOVIES (раптом їх оновили)
+  const defaults = new Map(DEFAULT_MOVIES.map(m => [m.title, m]));
+  [...state.toWatch, ...state.watched].forEach(m => {
+    const d = defaults.get(m.title);
+    if (d) Object.assign(m, { note: d.note, year: d.year, kind: d.kind });
+  });
   return state;
 }
 
@@ -804,6 +810,7 @@ function movieItem(m, list) {
   const year = meta ? ` <span class="movie-year">· ${esc(meta)}</span>` : '';
   const watchedOn = m.watchedAt
     ? `<p class="movie-note">Переглянули ${new Date(m.watchedAt).toLocaleDateString('uk-UA', { day: 'numeric', month: 'long' })}</p>`
+    : m.loading ? '<p class="movie-note">Шукаю опис…</p>'
     : (m.note ? `<p class="movie-note">${esc(m.note)}</p>` : '');
   const actions = list === 'toWatch'
     ? `<button class="icon-btn" type="button" data-act="pick" title="Обрати на сьогодні" aria-label="Обрати на сьогодні">🎬</button>
@@ -855,6 +862,90 @@ function markWatched(id) {
   toast(`«${found.movie.title}» тепер у переглянутих 💗`);
 }
 
+// Шукає фільм або серіал в українській Вікіпедії і бере перше речення статті як опис
+async function fetchMovieInfo(title) {
+  const ask = async query => {
+    const params = new URLSearchParams({
+      action: 'query', format: 'json', origin: '*', generator: 'search', gsrsearch: query, gsrlimit: '5',
+      prop: 'description|extracts', exintro: '1', explaintext: '1', exsentences: '2', exlimit: '5',
+    });
+    const res = await fetch(`https://uk.wikipedia.org/w/api.php?${params}`);
+    const data = await res.json();
+    const pages = Object.values(data.query?.pages || {}).sort((a, b) => a.index - b.index);
+    return pages.find(p => /фільм|серіал|мультфільм|аніме|мінісеріал/i.test(`${p.description || ''} ${p.extract || ''}`.slice(0, 300)));
+  };
+  const page = (await ask(title)) || (await ask(`${title} фільм`));
+  if (!page?.extract) return null;
+
+  let text = page.extract.replace(/\u0301/g, '');
+  // Спершу прибираємо дужки (англ. …, кор. …), бо в них крапки ламають пошук кінця речення
+  while (/\([^()]*\)/.test(text)) text = text.replace(/\s*\([^()]*\)/g, '');
+  const sentences = text.replace(/\s+/g, ' ').trim().split(/(?<=[.!?])\s+/);
+  let sentence = sentences[0];
+  // Надто коротке перше речення доповнюємо другим, щоб був хоч якийсь сюжет
+  if (sentence.length < 70 && sentences[1]) sentence += ` ${sentences[1]}`;
+  const dash = sentence.search(/ [—–-] /);
+  if (dash > -1 && dash < 90) sentence = sentence.slice(dash + 3);
+  sentence = sentence.charAt(0).toUpperCase() + sentence.slice(1);
+  if (sentence.length > 220) sentence = `${sentence.slice(0, 217).trimEnd()}…`;
+
+  const about = `${page.description || ''} ${page.extract}`;
+  const isSeries = /серіал/i.test(page.description || sentence);
+  const year = (about.match(/\b(19[0-9]{2}|20[0-9]{2})\b/) || [])[1];
+  return { note: sentence, kind: isSeries ? 'серіал' : undefined, year: !isSeries && year ? Number(year) : undefined };
+}
+
+async function describeMovie(id) {
+  let info = null;
+  try { info = await fetchMovieInfo(findMovie(id)?.movie.title || ''); } catch { /* немає інтернету — лишаємо без опису */ }
+  const found = findMovie(id);
+  if (!found) return;
+  delete found.movie.loading;
+  if (info) Object.assign(found.movie, info);
+  saveMovies();
+  renderMovies();
+  if (!info) toast('Опис не знайшовся, але фільм у списку 🍿');
+}
+
+let movieSpinning = false;
+function spinMovie(type) {
+  if (movieSpinning) return;
+  const isSeries = m => m.kind === 'серіал';
+  const pool = movies.toWatch.filter(m => type === 'any' || (type === 'series' ? isSeries(m) : !isSeries(m)));
+  if (!pool.length) {
+    toast(type === 'series' ? 'У списку поки немає серіалів 📺' : 'У списку поки нічого немає 🍿');
+    return;
+  }
+  const target = pool[Math.floor(Math.random() * pool.length)];
+  const reel = $('#movie-reel');
+  const show = m => { reel.innerHTML = `<span class="fate-emoji" aria-hidden="true">${isSeries(m) ? '📺' : '🎬'}</span><span class="fate-title">${esc(m.title)}</span>`; };
+  activeTab = 'toWatch';
+  reel.hidden = false;
+  reel.classList.remove('is-done');
+  if (reduceMotion || pool.length === 1) { show(target); reel.classList.add('is-done'); pickTonight(target.id); return; }
+
+  movieSpinning = true;
+  const totalSteps = 18;
+  let step = 0;
+  let last = null;
+  const tick = () => {
+    let m = target;
+    if (step < totalSteps) {
+      do { m = pool[Math.floor(Math.random() * pool.length)]; } while (m === last);
+    }
+    last = m;
+    show(m);
+    if (step >= totalSteps) {
+      reel.classList.add('is-done');
+      setTimeout(() => { movieSpinning = false; pickTonight(target.id); }, 600);
+      return;
+    }
+    step++;
+    setTimeout(tick, 55 + Math.pow(step / totalSteps, 3) * 340);
+  };
+  tick();
+}
+
 function pickTonight(id) {
   movies.tonight = id;
   saveMovies();
@@ -866,6 +957,7 @@ function initMovies() {
   movies = loadMovies();
   saveMovies();
   renderMovies();
+  movies.toWatch.filter(m => m.loading).forEach(m => describeMovie(m.id));
 
   document.querySelector('.tabs').addEventListener('click', e => {
     const tab = e.target.closest('.tab');
@@ -879,20 +971,19 @@ function initMovies() {
     const input = $('#movie-input');
     const title = input.value.trim();
     if (!title) return;
-    movies.toWatch.unshift({ id: crypto.randomUUID?.() || String(Math.random()), title, tag: 'added' });
+    const id = crypto.randomUUID?.() || String(Math.random());
+    movies.toWatch.unshift({ id, title, tag: 'added', loading: true });
     movies.removed = movies.removed.filter(t => t !== title);
     input.value = '';
     activeTab = 'toWatch';
     saveMovies();
     renderMovies();
-    toast('Додано до списку 🍿');
+    describeMovie(id);
   });
 
-  $('#movie-random').addEventListener('click', () => {
-    if (!movies.toWatch.length) { toast('Спершу додай кілька фільмів 🍿'); return; }
-    const m = movies.toWatch[Math.floor(Math.random() * movies.toWatch.length)];
-    activeTab = 'toWatch';
-    pickTonight(m.id);
+  $('#movie-random').addEventListener('click', e => {
+    const btn = e.target.closest('[data-movie-random]');
+    if (btn) spinMovie(btn.dataset.movieRandom);
   });
 
   $('#movie-list').addEventListener('click', e => {

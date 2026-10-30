@@ -656,7 +656,16 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.
   color: var(--ink);
 }
 .movie-form input:focus { outline: none; border-color: var(--blue-400); background: var(--white); }
-.movie-tools > .btn-ghost { flex: 0 0 auto; }
+.movie-random {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 16px;
+}
+.movie-random-label { font-size: .85rem; font-weight: 600; color: var(--muted); }
+.movie-reel { width: fit-content; max-width: 100%; margin: 14px auto 0; font-size: 1.25rem; }
 
 .tabs {
   display: flex;
