@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Для Катрі 💗</title>
+  <meta name="description" content="Маленький куточок інтернету для Катрі: наші моменти, зізнання і побачення.">
+  <meta name="theme-color" content="#FFC2D4">
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💗</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Manrope:wght@400;500;600;700&family=Noto+Color+Emoji&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <nav class="nav" aria-label="Розділи">
+    <a href="#top" class="nav-logo">К<span>💗</span></a>
+    <div class="nav-links">
+      <a href="#moments">Моменти</a>
+      <a href="#reasons">Кохаю</a>
+      <a href="#dates">Побачення</a>
+      <a href="#movies">Кіно</a>
+      <a href="#letter">Лист</a>
+    </div>
+  </nav>
+
+  <!-- ===== Головна ===== -->
+  <header class="hero" id="top">
+    <div class="hearts" aria-hidden="true"></div>
+    <div class="hero-inner">
+      <div class="hero-text">
+        <p class="eyebrow">Привіт, Котуська 👋</p>
+        <h1>Красуня,<br><em>ти найкраща на світі</em></h1>
+        <p class="lead">Тут наші фото, багато кохання і купа побачень. Вибирай сама або тисни на рандомну кнопку долі)</p>
+        <div class="counters" id="counters"></div>
+        <div class="hero-actions">
+          <a class="btn btn-pink" href="#dates">Обрати побачення</a>
+          <a class="btn btn-ghost" href="#moments">Наші фото</a>
+        </div>
+      </div>
+      <figure class="hero-photo">
+        <img src="photos/14.jpg" alt="Ми обіймаємось на заході сонця біля води" fetchpriority="high">
+      </figure>
+    </div>
+  </header>
+
+  <main>
+    <!-- ===== Наші моменти ===== -->
+    <section class="section" id="moments">
+      <div class="section-head">
+        <p class="eyebrow">Наші моменти</p>
+        <h2>Наші фоточки</h2>
+        <p>Тисни на фото, Красуня. Можна дивитись вічно, я перевіряв)</p>
+      </div>
+      <div class="gallery" id="gallery"></div>
+    </section>
+
+    <!-- ===== Чому я тебе кохаю ===== -->
+    <section class="section section-tint" id="reasons">
+      <div class="section-head">
+        <h2>Кохаю</h2>
+      </div>
+      <div class="reasons" id="reasons-grid"></div>
+    </section>
+
+    <!-- ===== Побачення ===== -->
+    <section class="section" id="dates">
+      <div class="section-head">
+        <p class="eyebrow">Наступне побачення</p>
+        <h2>Куди підемо, Любовка?</h2>
+        <p>Тут тільки те, що підходить під сезон. Тисни на картку або на рандом)</p>
+      </div>
+
+      <div class="date-filters" id="date-filters" role="group" aria-label="Фільтр за сезоном"></div>
+
+      <div class="fate" id="fate">
+        <div class="fate-buttons">
+          <button class="btn btn-blue btn-lg" id="random-date" type="button">Нехай вирішить доля 🎲</button>
+          <button class="btn btn-ghost btn-lg" id="generate-top" type="button">Згенерувати нове ✨</button>
+        </div>
+        <div class="fate-reel" id="fate-reel" aria-live="polite" hidden></div>
+      </div>
+
+      <div class="dates" id="dates-grid"></div>
+
+      <div class="generator" id="generator">
+        <p class="generator-text">Нічого не зачепило? Зараз щось придумаю)</p>
+        <button class="btn btn-pink btn-lg" id="generate-date" type="button">Згенерувати нове побачення ✨</button>
+        <div class="generated" id="generated" aria-live="polite" hidden></div>
+      </div>
+
+      <form class="generator own-form" id="own-form" autocomplete="off">
+        <p class="generator-text">Або придумай своє)</p>
+        <div class="emoji-options" id="own-emojis" role="group" aria-label="Емодзі для картки"></div>
+        <input class="field" id="own-title" type="text" maxlength="40" placeholder="Назва, наприклад «Караоке-вечір»" aria-label="Назва побачення" required>
+        <input class="field" id="own-short" type="text" maxlength="60" placeholder="Короткий опис" aria-label="Опис побачення">
+        <button class="btn btn-pink btn-lg" type="submit">Створити картку ✨</button>
+      </form>
+    </section>
+
+    <!-- ===== Кіносписок ===== -->
+    <section class="section section-tint-blue" id="movies">
+      <div class="section-head">
+        <p class="eyebrow">Для кіновечора</p>
+        <h2>Наш кіносписок</h2>
+        <p>Обирай фільм на вечір. Подивились, тиць галочку. Попкорн з мене.</p>
+      </div>
+
+      <div class="tonight" id="tonight" hidden>
+        <p class="tonight-label">Сьогодні дивимось</p>
+        <p class="tonight-title" id="tonight-title"></p>
+        <div class="tonight-actions">
+          <button class="btn btn-pink" id="tonight-done" type="button">Переглянули ✓</button>
+          <button class="btn btn-ghost" id="tonight-clear" type="button">Обрати інший</button>
+        </div>
+      </div>
+
+      <div class="movies-card">
+        <div class="movie-tools">
+          <form class="movie-form" id="movie-form" autocomplete="off">
+            <input id="movie-input" type="text" maxlength="80" placeholder="Додати фільм…" aria-label="Назва фільму">
+            <button class="btn btn-blue" type="submit">Додати</button>
+          </form>
+          <button class="btn btn-ghost" id="movie-random" type="button">🎲 Випадковий</button>
+        </div>
+
+        <div class="tabs" role="tablist">
+          <button class="tab" role="tab" data-tab="toWatch" aria-selected="true" type="button">Хочемо глянути <span class="tab-count" id="count-toWatch">0</span></button>
+          <button class="tab" role="tab" data-tab="watched" aria-selected="false" type="button">Переглянули <span class="tab-count" id="count-watched">0</span></button>
+        </div>
+
+        <ul class="movie-list" id="movie-list"></ul>
+      </div>
+    </section>
+
+    <!-- ===== Лист ===== -->
+    <section class="section letter-section" id="letter">
+      <div class="section-head">
+        <p class="eyebrow">Наостанок</p>
+        <h2>Тобі лист</h2>
+      </div>
+
+      <button class="envelope" id="envelope" type="button" aria-expanded="false" aria-controls="letter-body">
+        <span class="env-back"></span>
+        <span class="env-paper"></span>
+        <span class="env-front"></span>
+        <span class="env-flap"></span>
+        <span class="env-seal">💗</span>
+        <span class="env-hint">Відкрий, Котуська</span>
+      </button>
+
+      <article class="letter" id="letter-body" hidden>
+        <figure class="polaroid">
+          <img src="photos/20.jpg" alt="Ми сидимо на піску в обіймах" loading="lazy">
+          <figcaption>ти і я</figcaption>
+        </figure>
+        <div class="letter-text" id="letter-text"></div>
+      </article>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>Зроблено для Любовки. Кохаю тебе 💗</p>
+  </footer>
+
+  <!-- Деталі побачення -->
+  <dialog class="modal" id="date-modal" aria-labelledby="modal-title">
+    <button class="modal-close" type="button" data-close aria-label="Закрити">✕</button>
+    <div class="modal-body" id="modal-body"></div>
+  </dialog>
+
+  <!-- Перегляд фото -->
+  <dialog class="lightbox" id="lightbox" aria-label="Перегляд фото">
+    <button class="lb-btn lb-close" type="button" data-close aria-label="Закрити">✕</button>
+    <button class="lb-btn lb-prev" type="button" aria-label="Попереднє фото">‹</button>
+    <figure class="lb-figure">
+      <img id="lb-img" alt="">
+      <figcaption id="lb-caption"></figcaption>
+    </figure>
+    <button class="lb-btn lb-next" type="button" aria-label="Наступне фото">›</button>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
