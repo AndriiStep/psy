@@ -510,7 +510,7 @@ function addOwnDate(date) {
     card.classList.add('is-new');
     setTimeout(() => card.classList.remove('is-new'), 2400);
   }
-  toast('Картку створено 💗');
+  toast('Картку створено, Коханнячко 💗');
 }
 
 function deleteOwnDate(id) {
@@ -624,7 +624,7 @@ async function shareDate(what) {
   }
   try {
     await navigator.clipboard.writeText(text);
-    toast('Скопійовано, встав у наш чат 💗');
+    toast('Скопійовано, Красуня, встав у наш чат 💗');
   } catch {
     toast(text);
   }
@@ -907,43 +907,66 @@ async function describeMovie(id) {
   if (!info) toast('Опис не знайшовся, але фільм у списку 🍿');
 }
 
-let movieSpinning = false;
-function spinMovie(type) {
-  if (movieSpinning) return;
-  const isSeries = m => m.kind === 'серіал';
-  const pool = movies.toWatch.filter(m => type === 'any' || (type === 'series' ? isSeries(m) : !isSeries(m)));
+/* Генератор нового фільму чи серіалу — ідеї під те, що нам уже подобається */
+const MOVIE_IDEAS = {
+  film: [
+    { title: 'Зодіак', year: 2007, by: 'Девід Фінчер', like: ['Seven', 'Загублена'], note: 'Карикатурист і журналісти роками полюють на вбивцю Зодіака, який дражнить поліцію шифрованими листами.' },
+    { title: 'Полонянки', year: 2013, by: 'Дені Вільнев', like: ['Seven', 'Мама'], note: 'Батько, в якого зникла донька, береться шукати викрадача сам, коли поліція заходить у глухий кут.' },
+    { title: 'Спогади про вбивство', year: 2003, by: 'Пон Джун Хо', like: ['Мама', 'Seven'], note: 'Двоє детективів у корейському селі 1980-х шукають серійного вбивцю без жодних сучасних методів.' },
+    { title: 'Олдбой', year: 2003, by: 'Пак Чхан Ук', like: ['Мама', 'Таксист'], note: 'Чоловіка п’ятнадцять років тримають замкненим без пояснень, а потім відпускають і дають п’ять днів знайти кривдника.' },
+    { title: 'Мовчання ягнят', year: 1991, by: 'Джонатан Демме', like: ['Seven', 'Mindhunter'], note: 'Молода курсантка ФБР радиться з ув’язненим психіатром-канібалом, щоб упіймати іншого серійного вбивцю.' },
+    { title: 'Бійцівський клуб', year: 1999, by: 'Девід Фінчер', like: ['Seven', 'Таксист'], note: 'Офісний працівник із безсонням разом із дивним продавцем мила створює підпільний клуб бійок.' },
+    { title: 'Драйв', year: 2011, by: 'Ніколас Віндінг Рефн', like: ['Таксист'], note: 'Мовчазний каскадер, який підробляє водієм для пограбувань, вплутується в небезпечну історію, захищаючи сусідку та її сина.' },
+    { title: 'Токійська повість', year: 1953, by: 'Ясудзіро Одзу', like: ['Tokyo-Ga', 'Жити'], note: 'Літнє подружжя приїздить у Токіо до дорослих дітей, яким на них постійно бракує часу.' },
+    { title: 'Ідеальні дні', year: 2023, by: 'Вім Вендерс', like: ['Tokyo-Ga', 'Жити'], note: 'Прибиральник токійських туалетів живе простим розміреним життям і вміє радіти кожній дрібниці.' },
+    { title: 'Париж, Техас', year: 1984, by: 'Вім Вендерс', like: ['Tokyo-Ga', 'Таксист'], note: 'Чоловік, який чотири роки блукав пустелею, повертається, щоб знайти сина і колишню дружину.' },
+    { title: 'Сім самураїв', year: 1954, by: 'Акіра Куросава', like: ['Жити', 'Володар Перснів'], note: 'Бідне селище наймає сімох самураїв, щоб захиститися від бандитів, які щороку забирають урожай.' },
+    { title: 'Віднесені привидами', year: 2001, by: 'Хаяо Міядзакі', like: ['The Fall', 'Володар Перснів'], note: 'Дівчинка потрапляє у світ духів і мусить врятувати батьків, яких перетворили на свиней.' },
+    { title: 'Лабіринт Фавна', year: 2006, by: 'Гільєрмо дель Торо', like: ['The Fall', 'Володар Перснів'], note: 'Дівчинка в Іспанії 1944 року тікає від жорстокого вітчима в казковий світ, де мусить виконати три завдання.' },
+    { title: 'Твоє ім’я', year: 2016, by: 'Макото Сінкай', like: ['Love Letter'], note: 'Хлопець із Токіо і дівчина з провінції, які ніколи не бачились, раптом починають прокидатися в тілах одне одного.' },
+    { title: 'Труднощі перекладу', year: 2003, by: 'Софія Коппола', like: ['Love Letter', 'Tokyo-Ga'], note: 'Втомлений актор і молода дружина фотографа знайомляться в токійському готелі й рятують одне одного від самотності.' },
+    { title: 'Прибуття', year: 2016, by: 'Дені Вільнев', like: ['Жити', 'Love Letter'], note: 'Лінгвістка вчиться розмовляти з прибульцями, і це змінює те, як вона бачить час і власне життя.' },
+  ],
+  series: [
+    { title: 'Severance', year: 2022, like: ['Темна матерія'], note: 'Працівникам корпорації розділяють пам’ять на робочу й особисту, і на роботі вони нічого не знають про власне життя.' },
+    { title: 'Silo', year: 2023, like: ['Темна матерія'], note: 'Люди століттями живуть у величезному підземному бункері, а інженерка Джульєтт з’ясовує, що від них приховують.' },
+    { title: 'Темрява', year: 2017, like: ['Темна матерія'], note: 'Зникнення дітей у німецькому містечку відкриває подорожі в часі, які переплели долі чотирьох родин.' },
+    { title: 'Заради всього людства', year: 2019, like: ['Темна матерія'], note: 'Що було б, якби СРСР першим висадився на Місяць і космічні перегони ніколи не закінчились.' },
+    { title: '11.22.63', year: 2016, like: ['Темна матерія'], note: 'Учитель через портал потрапляє в 1958 рік, щоб запобігти вбивству Кеннеді.' },
+    { title: 'Гарні передвістя', year: 2019, like: ['Ted Lasso', 'Темна матерія'], note: 'Ангел і демон, які за тисячі років звикли до життя на Землі, разом намагаються скасувати апокаліпсис.' },
+    { title: 'Добре місце', year: 2016, like: ['Ted Lasso', 'Правдива терапія'], note: 'Егоїстка після смерті помилково потрапляє в рай і потай вчиться бути хорошою людиною, поки її не викрили.' },
+    { title: 'Шиттс Крік', year: 2015, like: ['Ted Lasso'], note: 'Багата родина банкрутує і переїжджає в крихітне містечко, яке колись купила як жарт.' },
+    { title: 'Початкова школа Ебботт', year: 2021, like: ['Ted Lasso'], note: 'Вчителі бідної школи у Філадельфії з гумором і майже без грошей намагаються дати дітям найкраще.' },
+    { title: 'Ведмідь', year: 2022, like: ['Правдива терапія'], note: 'Молодий шеф із ресторанів високої кухні повертається в Чикаго рятувати сендвічну покійного брата.' },
+    { title: 'Убивства в одній будівлі', year: 2021, like: ['Ted Lasso', 'Правдива терапія'], note: 'Троє сусідів, фанатів тру-крайму, розслідують убивство у своєму будинку і записують про це подкаст.' },
+    { title: 'Fleabag', year: 2016, like: ['Правдива терапія'], note: 'Дотепна лондонка намагається впоратись із горем, родиною і коханням, постійно підморгуючи глядачу.' },
+  ],
+};
+
+let movieIdea = null;
+function generateMovie(type) {
+  const taken = new Set([...movies.toWatch, ...movies.watched].map(m => m.title.toLowerCase()).concat(movies.removed.map(t => t.toLowerCase())));
+  const pool = MOVIE_IDEAS[type].filter(m => !taken.has(m.title.toLowerCase()) && m !== movieIdea);
+  const box = $('#movie-generated');
   if (!pool.length) {
-    toast(type === 'series' ? 'У списку поки немає серіалів 📺' : 'У списку поки нічого немає 🍿');
+    toast(type === 'series' ? 'Серіали-ідеї закінчились, Кохання, додавай свої 📺' : 'Фільми-ідеї закінчились, Кохання, додавай свої 🎬');
     return;
   }
-  const target = pool[Math.floor(Math.random() * pool.length)];
-  const reel = $('#movie-reel');
-  const show = m => { reel.innerHTML = `<span class="fate-emoji" aria-hidden="true">${isSeries(m) ? '📺' : '🎬'}</span><span class="fate-title">${esc(m.title)}</span>`; };
-  activeTab = 'toWatch';
-  reel.hidden = false;
-  reel.classList.remove('is-done');
-  if (reduceMotion || pool.length === 1) { show(target); reel.classList.add('is-done'); pickTonight(target.id); return; }
-
-  movieSpinning = true;
-  const totalSteps = 18;
-  let step = 0;
-  let last = null;
-  const tick = () => {
-    let m = target;
-    if (step < totalSteps) {
-      do { m = pool[Math.floor(Math.random() * pool.length)]; } while (m === last);
-    }
-    last = m;
-    show(m);
-    if (step >= totalSteps) {
-      reel.classList.add('is-done');
-      setTimeout(() => { movieSpinning = false; pickTonight(target.id); }, 600);
-      return;
-    }
-    step++;
-    setTimeout(tick, 55 + Math.pow(step / totalSteps, 3) * 340);
-  };
-  tick();
+  movieIdea = { ...pick(pool), type };
+  const isSeries = type === 'series';
+  box.hidden = false;
+  box.innerHTML = `
+    <div class="gen-emoji" aria-hidden="true">${isSeries ? '📺' : '🎬'}</div>
+    <p class="gen-kicker">${isSeries ? 'Новий серіал для нас' : 'Новий фільм для нас'}</p>
+    <h3 class="gen-title">${esc(movieIdea.title)}</h3>
+    <p class="movie-gen-meta">${isSeries ? `серіал · ${movieIdea.year}` : `${movieIdea.year} · ${esc(movieIdea.by)}`}</p>
+    <p class="movie-gen-note">${esc(movieIdea.note)}</p>
+    <p class="movie-gen-like">Бо нам зайшло: ${movieIdea.like.map(esc).join(', ')}</p>
+    <div class="modal-actions">
+      <button class="btn btn-pink" type="button" data-idea-add>Додати в список 🍿</button>
+      <button class="btn btn-ghost" type="button" data-idea-again>Ще варіант 🎲</button>
+    </div>`;
+  if (!reduceMotion) { box.style.animation = 'none'; void box.offsetWidth; box.style.animation = ''; }
 }
 
 function pickTonight(id) {
@@ -981,9 +1004,30 @@ function initMovies() {
     describeMovie(id);
   });
 
-  $('#movie-random').addEventListener('click', e => {
-    const btn = e.target.closest('[data-movie-random]');
-    if (btn) spinMovie(btn.dataset.movieRandom);
+  $('#movie-random').addEventListener('click', () => {
+    if (!movies.toWatch.length) { toast('Спершу додай кілька фільмів, Коханнячко 🍿'); return; }
+    activeTab = 'toWatch';
+    pickTonight(pick(movies.toWatch).id);
+  });
+
+  document.querySelector('.movie-gen-buttons').addEventListener('click', e => {
+    const btn = e.target.closest('[data-movie-gen]');
+    if (btn) generateMovie(btn.dataset.movieGen);
+  });
+
+  $('#movie-generated').addEventListener('click', e => {
+    if (e.target.closest('[data-idea-again]') && movieIdea) { generateMovie(movieIdea.type); return; }
+    if (e.target.closest('[data-idea-add]') && movieIdea) {
+      const { title, year, note, type } = movieIdea;
+      movies.toWatch.unshift({ id: crypto.randomUUID?.() || String(Math.random()), title, note, tag: 'rec', ...(type === 'series' ? { kind: 'серіал' } : { year }) });
+      movies.removed = movies.removed.filter(t => t !== title);
+      activeTab = 'toWatch';
+      saveMovies();
+      renderMovies();
+      $('#movie-generated').hidden = true;
+      movieIdea = null;
+      toast(`«${title}» у нашому списку 🍿`);
+    }
   });
 
   $('#movie-list').addEventListener('click', e => {

@@ -656,16 +656,13 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.
   color: var(--ink);
 }
 .movie-form input:focus { outline: none; border-color: var(--blue-400); background: var(--white); }
-.movie-random {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  margin-top: 16px;
-}
-.movie-random-label { font-size: .85rem; font-weight: 600; color: var(--muted); }
-.movie-reel { width: fit-content; max-width: 100%; margin: 14px auto 0; font-size: 1.25rem; }
+.movie-tools > .btn-ghost { flex: 0 0 auto; }
+.movie-gen { margin-top: 16px; }
+.movie-gen-buttons { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+.movie-generated { margin: 16px auto 0; text-align: center; background: linear-gradient(135deg, var(--pink-50), var(--blue-50)); box-shadow: none; }
+.movie-gen-meta { margin: -10px 0 12px; font-size: .85rem; font-weight: 600; color: var(--muted); }
+.movie-gen-note { max-width: 46ch; margin: 0 auto 12px; }
+.movie-gen-like { margin: 0 0 18px; font-family: var(--font-hand); font-size: 1.2rem; color: var(--blue-600); }
 
 .tabs {
   display: flex;

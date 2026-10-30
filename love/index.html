@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Manrope:wght@400;500;600;700&family=Noto+Color+Emoji&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=8">
+  <link rel="stylesheet" href="style.css?v=10">
 </head>
 <body>
 
@@ -69,7 +69,7 @@
     <section class="section" id="dates">
       <div class="section-head">
         <p class="eyebrow">Наступне побачення</p>
-        <h2>Куди підемо, Любовка?</h2>
+        <h2>Куди підемо, Кохання?</h2>
         <p>Тут тільки те, що підходить під сезон. Тисни на картку або на рандом)</p>
       </div>
 
@@ -86,7 +86,7 @@
       <div class="dates" id="dates-grid"></div>
 
       <div class="generator" id="generator">
-        <p class="generator-text">Нічого не зачепило? Зараз щось придумаю)</p>
+        <p class="generator-text">Нічого не зачепило, Красуня? Зараз щось придумаю)</p>
         <button class="btn btn-pink btn-lg" id="generate-date" type="button">Згенерувати нове побачення ✨</button>
         <div class="generated" id="generated" aria-live="polite" hidden></div>
       </div>
@@ -105,7 +105,7 @@
       <div class="section-head">
         <p class="eyebrow">Для кіновечора</p>
         <h2>Наш кіносписок</h2>
-        <p>Обирай фільм на вечір. Подивились, тиць галочку. Попкорн з мене.</p>
+        <p>Обирай фільм на вечір, Коханнячко. Подивились, тиць галочку. Попкорн з мене.</p>
       </div>
 
       <div class="tonight" id="tonight" hidden>
@@ -123,15 +123,16 @@
             <input id="movie-input" type="text" maxlength="80" placeholder="Додати фільм чи серіал…" aria-label="Назва фільму">
             <button class="btn btn-blue" type="submit">Додати</button>
           </form>
+          <button class="btn btn-ghost" id="movie-random" type="button">🎲 Випадковий</button>
         </div>
 
-        <div class="movie-random" id="movie-random" role="group" aria-label="Випадковий вибір зі списку">
-          <span class="movie-random-label">Рандом зі списку:</span>
-          <button class="chip" type="button" data-movie-random="film">🎬 Фільм</button>
-          <button class="chip" type="button" data-movie-random="series">📺 Серіал</button>
-          <button class="chip" type="button" data-movie-random="any">🎲 Будь-що</button>
+        <div class="movie-gen">
+          <div class="movie-gen-buttons">
+            <button class="btn btn-pink" type="button" data-movie-gen="film">Згенерувати новий фільм 🎬</button>
+            <button class="btn btn-blue" type="button" data-movie-gen="series">Згенерувати новий серіал 📺</button>
+          </div>
+          <div class="generated movie-generated" id="movie-generated" aria-live="polite" hidden></div>
         </div>
-        <div class="fate-reel movie-reel" id="movie-reel" aria-live="polite" hidden></div>
 
         <div class="tabs" role="tablist">
           <button class="tab" role="tab" data-tab="toWatch" aria-selected="true" type="button">Хочемо глянути <span class="tab-count" id="count-toWatch">0</span></button>
@@ -155,7 +156,7 @@
         <span class="env-front"></span>
         <span class="env-flap"></span>
         <span class="env-seal">💗</span>
-        <span class="env-hint">Відкрий, Котуська</span>
+        <span class="env-hint">Відкрий, Кохання</span>
       </button>
 
       <article class="letter" id="letter-body" hidden>
@@ -191,6 +192,6 @@
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-  <script src="script.js?v=8"></script>
+  <script src="script.js?v=10"></script>
 </body>
 </html>
