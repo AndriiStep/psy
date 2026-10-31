@@ -626,7 +626,7 @@ function chooseDate(i, x, y) {
     <h3 id="modal-title">${d.emoji} ${esc(d.title)}</h3>
     <p class="modal-note">Пиши мені, я все організую)</p>
     <div class="modal-actions">
-      <button class="btn btn-pink" type="button" data-share="${esc(`${d.emoji} ${d.title}`)}">Надіслати йому 💌</button>
+      <button class="btn btn-pink" type="button" data-share="${esc(`${d.emoji} ${d.title}`)}">Повідомити коханого 💌</button>
       <button class="btn btn-ghost" type="button" data-close>Закрити</button>
     </div>`;
 }
