@@ -1676,7 +1676,7 @@ footer .on { color: var(--neon); }
       source: "Mini-IPIP (M. B. Donnellan, F. L. Oswald, B. M. Baird, R. E. Lucas, 2006). Пункти з International Personality Item Pool, що перебуває в суспільному надбанні."
     },
     {
-      id: "braverman", file: "braverman.exe", kind: "нейромедіатори",
+      id: "braverman", file: "braverman.exe", kind: "",
       title: "Тест Бравермана (нейромедіатори)",
       desc: "Опитувальник Еріка Бравермана: яка з чотирьох «нейромедіаторних натур» тобі найближча (дофамін, ацетилхолін, ГАМК, серотонін) і де можуть бути дефіцити.",
       intro: "Тест має дві частини. Частина А показує твою природу: який нейромедіатор найбільше визначає твій темперамент. Частина Б — де можуть бути дефіцити. Відповідай «так», якщо твердження здебільшого про тебе. Тест довгий, тож обери спокійний момент: якщо закрити вікно, відповіді не збережуться.",
@@ -1688,7 +1688,8 @@ footer .on { color: var(--neon); }
       alert(a) {
         return this.items.some((it, i) => it.t === BRAVERMAN_CRISIS && a[i]) ? "Ти відповідаєш, що в житті бували думки про самогубство. Якщо вони є зараз, будь ласка, не залишайся з ними наодинці. " + CRISIS : "";
       },
-      source: "Опитувальник Е. Бравермана (The Edge Effect), український переклад. Методика не є науково валідованою і не вимірює рівень нейромедіаторів в організмі: результат — для самоспостереження і розмови на сесії, а не діагноз і не привід приймати добавки чи ліки."
+      source: "Опитувальник Е. Бравермана (The Edge Effect), український переклад.",
+      noDisclaimer: true
     },
     {
       id: "bdi", file: "bdi-ii.exe", kind: "шкала Бека",
@@ -1746,13 +1747,13 @@ footer .on { color: var(--neon); }
   }
 
   const list = document.getElementById("test-list");
-  // Tests still waiting for their texts (Beck, Braverman) stay in the code but are not shown.
+  // Tests still waiting for their texts (Beck) stay in the code but are not shown.
   TESTS.filter(isReady).forEach(t => {
     const card = document.createElement("article");
     card.className = "test-card panel";
     card.innerHTML = `
       <div class="head"><span class="file" style="font:400 11px/1 var(--font-display);letter-spacing:.1em;color:var(--dim)">${t.file}</span>
-        <span class="kind">${t.kind}</span></div>
+        ${t.kind ? `<span class="kind">${t.kind}</span>` : ""}</div>
       <h3>${t.title}</h3>
       <p>${t.desc}</p>
       <div class="foot"><span class="meta">${t.meta}</span>
@@ -1859,7 +1860,7 @@ footer .on { color: var(--neon); }
       <a class="btn" href="https://t.me/AndyStefurak" target="_blank" rel="noopener">[▶ Обговорити результат]</a>
       <button class="btn btn--ghost" type="button" id="again">[↻ Пройти ще раз]</button></div>
       <div>${shareButton()}</div>
-      <p class="fine">Це результат самоопитувальника, а не діагноз. Якщо результат тебе непокоїть, обговори його з фахівцем.</p>`;
+      ${cur.noDisclaimer ? "" : `<p class="fine">Це результат самоопитувальника, а не діагноз. Якщо результат тебе непокоїть, обговори його з фахівцем.</p>`}`;
   }
 
   // Profile tests (Big Five, Braverman) score each factor separately instead of one total.
@@ -1913,7 +1914,7 @@ footer .on { color: var(--neon); }
         ? lead.map(r => `<p><b class="band" style="font-size:.95rem">${r.f.name}.</b> ${r.f.text}</p>`).join("")
         : "<p>Жодна з чотирьох природ не виражена: у частині А не було відповідей «так».</p>"}
       ${lead.length > 1 ? "<p>Кілька природ набрали однаково: у тобі поєднуються їхні риси.</p>" : ""}
-      <div class="band">Можливі дефіцити</div>
+      <div class="band">Дефіцити</div>
       ${bars(deficit, r => LEVEL(r.x) === "виразно" ? "warn" : "")}
       ${gaps.length
         ? gaps.map(r => `<p><b class="band" style="font-size:.95rem">${r.f.name}: ${LEVEL(r.x)}.</b> ${r.f.text}</p>`).join("")
