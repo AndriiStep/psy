@@ -19,6 +19,7 @@ TEST_RE = re.compile(
     r'id: "([a-z0-9]+)", file: "[^"]*", kind: "[^"]*",\s*'
     r'title: "([^"]*)",\s*desc: "([^"]*)"'
 )
+HIDDEN_RE = re.compile(r"const HIDDEN_TESTS = \[([^\]]*)\]")
 
 
 def page(src, *, title, desc, url, body_attr, depth):
@@ -39,22 +40,27 @@ def main():
     src = (ROOT / "index.html").read_text(encoding="utf-8")
     tests = TEST_RE.findall(src)
     assert tests, "no tests found in index.html"
+    hidden = set(re.findall(r'"([a-z0-9]+)"', HIDDEN_RE.search(src).group(1)))
 
     out_dir = ROOT / "tests"
     for old in out_dir.glob("*/index.html"):
         old.unlink()
+        if not any(old.parent.iterdir()):
+            old.parent.rmdir()
 
     (out_dir).mkdir(exist_ok=True)
     (out_dir / "index.html").write_text(page(
         src,
         title="Психологічні тести онлайн | Андрій Стефурак",
-        desc="Безкоштовні валідовані тести: депресія, тривога, самооцінка, благополуччя, задоволеність життям, ПТСР. Результат одразу, відповіді нікуди не надсилаються.",
+        desc="Безкоштовні психологічні тести: депресія, тривога, благополуччя, самооцінка, тест Бравермана. Результат одразу, відповіді нікуди не надсилаються.",
         url=f"{SITE}/tests/",
         body_attr='data-scroll="tests"',
         depth=1,
     ), encoding="utf-8")
 
     for test_id, title, desc in tests:
+        if test_id in hidden:
+            continue
         d = out_dir / test_id
         d.mkdir(exist_ok=True)
         (d / "index.html").write_text(page(
